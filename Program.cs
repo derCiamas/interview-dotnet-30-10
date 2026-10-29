@@ -8,11 +8,15 @@ app.MapGet("/products/{id:int}", async (
     IProductService service,
     CancellationToken cancellationToken) =>
 {
-    var product = await service.GetAsync(id, cancellationToken);
-
-    return product is null
-        ? Results.NotFound()
-        : Results.Ok(product);
+    try
+    {
+        var product = await service.GetAsync(id, cancellationToken);
+        return Results.Ok(product);
+    }
+    catch (Exception)
+    {
+        return Results.BadRequest();
+    }
 });
 
 app.Run();
